@@ -95,7 +95,12 @@ def stations():
 def tobs():
      # Create our session (link) from Python to the DB
     session = Session(engine)
-
+    
+    most_active = session.query(measurement.station, func.count(measurement.station)).group_by(measurement.station).\
+                  order_by(func.count(measurement.station).desc()).all()
+    best_station = most_active[0][0]
+    maxdate = dt.datetime(2017,8,23)
+    mindate = dt.datetime(2016,8,23)
     
     # Query temperatures
     temp_results = session.query(measurement.station, measurement.tobs).\
